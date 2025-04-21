@@ -10,3 +10,9 @@ public class MenuDrivenCRUD {
             connection = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/khushi", "root", "root");
 
+             while (true) {
+                   System.out.println("\n--- Login Menu ---");
+                 System.out.println("1. Login");
+                System.out.println("2. Exit");
+                System.out.print("Enter choice: ");
+                int choice = sc.nextInt();
