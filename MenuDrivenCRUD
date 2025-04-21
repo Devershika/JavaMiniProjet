@@ -5,3 +5,8 @@ public class MenuDrivenCRUD {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         Connection connection = null;
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connection = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/khushi", "root", "root");
+
