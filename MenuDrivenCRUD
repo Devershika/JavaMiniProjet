@@ -16,3 +16,14 @@ public class MenuDrivenCRUD {
                 System.out.println("2. Exit");
                 System.out.print("Enter choice: ");
                 int choice = sc.nextInt();
+
+                System.out.print("Enter Username: ");
+                String username = sc.next();
+                System.out.print("Enter Password: ");
+                String password = sc.next();
+
+                String loginQuery = "SELECT role FROM users WHERE username=? AND password=?";
+                PreparedStatement loginStmt = connection.prepareStatement(loginQuery);
+                loginStmt.setString(1, username);
+                loginStmt.setString(2, password);
+                ResultSet rs = loginStmt.executeQuery();
