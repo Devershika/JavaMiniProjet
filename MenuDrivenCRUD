@@ -17,6 +17,11 @@ public class MenuDrivenCRUD {
                 System.out.print("Enter choice: ");
                 int choice = sc.nextInt();
 
+                if (choice == 2) {
+                    System.out.println("Exiting the program. Goodbye!");
+                    break;
+                }
+
                 System.out.print("Enter Username: ");
                 String username = sc.next();
                 System.out.print("Enter Password: ");
