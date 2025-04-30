@@ -1,0 +1,60 @@
+                case 7:
+                    System.out.print("Enter Course ID: ");
+                    int courseId = sc.nextInt();
+                    sc.nextLine();
+                    System.out.print("Enter Course Name: ");
+                    String courseName = sc.nextLine();
+                    System.out.print("Enter Course Credits: ");
+                    int credits = sc.nextInt();
+                    String insertCourseQuery = "INSERT INTO courses (course_id, course_name, credits) VALUES (?, ?, ?)";
+                    PreparedStatement insertCourseStmt = connection.prepareStatement(insertCourseQuery);
+                    insertCourseStmt.setInt(1, courseId);
+                    insertCourseStmt.setString(2, courseName);
+                    insertCourseStmt.setInt(3, credits);
+                    insertCourseStmt.executeUpdate();
+                    System.out.println("Course inserted.");
+                    break;
+                case 8:
+                    System.out.print("Enter Course ID to Update: ");
+                    int courseIdToUpdate = sc.nextInt();
+                    sc.nextLine();
+                    System.out.print("Enter New Course Name: ");
+                    String newCourseName = sc.nextLine();
+                    System.out.print("Enter New Credits: ");
+                    int newCredits = sc.nextInt();
+                    String updateCourseQuery = "UPDATE courses SET course_name=?, credits=? WHERE course_id=?";
+                    PreparedStatement updateCourseStmt = connection.prepareStatement(updateCourseQuery);
+                    updateCourseStmt.setString(1, newCourseName);
+                    updateCourseStmt.setInt(2, newCredits);
+                    updateCourseStmt.setInt(3, courseIdToUpdate);
+                    int updatedCourse = updateCourseStmt.executeUpdate();
+                    if (updatedCourse == 0) {
+                        System.out.println("Course not found.");
+                    } else {
+                        System.out.println("Course updated.");
+                    }
+                    break;
+                case 9:
+                    PreparedStatement coursesStmt = connection.prepareStatement("SELECT * FROM courses");
+                    ResultSet coursesRs = coursesStmt.executeQuery();
+                    System.out.println("\n--- Courses ---");
+                    while (coursesRs.next()) {
+                        System.out.println("Course ID: " + coursesRs.getInt("course_id") +
+                                ", Course Name: " + coursesRs.getString("course_name") +
+                                ", Credits: " + coursesRs.getInt("credits"));
+                    }
+                    break;
+                case 10:
+                    System.out.print("Enter Course ID to Delete: ");
+                    int courseIdToDelete = sc.nextInt();
+                    String deleteCourseQuery = "DELETE FROM courses WHERE course_id=?";
+                    PreparedStatement deleteCourseStmt = connection.prepareStatement(deleteCourseQuery);
+                    deleteCourseStmt.setInt(1, courseIdToDelete);
+                    int deletedCourses = deleteCourseStmt.executeUpdate();
+                    System.out.println(deletedCourses > 0 ? "Course deleted." : "Course not found.");
+                    break;
+                default:
+                    System.out.println("Invalid choice.");
+            }
+        }
+    }
