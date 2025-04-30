@@ -1,0 +1,93 @@
+ static void adminMenu(Scanner sc, Connection connection) throws SQLException, StudentNotFoundException, DuplicateEntryException, UserNotFoundException {
+        while (true) {
+            System.out.println("\n--- Admin Menu ---");
+            System.out.println("1. Insert Student");
+            System.out.println("2. Update Student");
+            System.out.println("3. View Students");
+            System.out.println("4. Update Faculty Name");
+            System.out.println("5. Logout");
+            System.out.println("6. Delete Student");
+            System.out.println("7. Insert Course");
+            System.out.println("8. Update Course");
+            System.out.println("9. View Courses");
+            System.out.println("10. Delete Course");
+            System.out.print("Enter choice: ");
+            int ch = sc.nextInt();
+            sc.nextLine();
+
+            switch (ch) {
+                case 1:
+                    System.out.print("Enter Roll No: ");
+                    int rno = sc.nextInt();
+                    sc.nextLine();
+                    System.out.print("Enter Name: ");
+                    String name = sc.nextLine();
+                    System.out.print("Enter Age: ");
+                    int age = sc.nextInt();
+                    try {
+                        String insertQuery = "INSERT INTO students (rno, name, age) VALUES (?, ?, ?)";
+                        PreparedStatement insertStmt = connection.prepareStatement(insertQuery);
+                        insertStmt.setInt(1, rno);
+                        insertStmt.setString(2, name);
+                        insertStmt.setInt(3, age);
+                        insertStmt.executeUpdate();
+                        System.out.println("Student inserted.");
+                    } catch (SQLIntegrityConstraintViolationException e) {
+                        throw new DuplicateEntryException("Student with this roll number already exists.");
+                    }
+                    break;
+                    case 2:
+                    System.out.print("Enter Roll No to Update: ");
+                    int rnoU = sc.nextInt();
+                    sc.nextLine();
+                    System.out.print("Enter New Name: ");
+                    String newName = sc.nextLine();
+                    System.out.print("Enter New Age: ");
+                    int newAge = sc.nextInt();
+                    String updateQuery = "UPDATE students SET name=?, age=? WHERE rno=?";
+                    PreparedStatement updateStmt = connection.prepareStatement(updateQuery);
+                    updateStmt.setString(1, newName);
+                    updateStmt.setInt(2, newAge);
+                    updateStmt.setInt(3, rnoU);
+                    int updated = updateStmt.executeUpdate();
+                    if (updated == 0) {
+                        throw new StudentNotFoundException("No student found with roll no: " + rnoU);
+                    }
+                    System.out.println("Updated.");
+                    break;
+                case 3:
+                    PreparedStatement ps = connection.prepareStatement("SELECT * FROM students");
+                    ResultSet rs = ps.executeQuery();
+                    System.out.println("\n--- Students ---");
+                    while (rs.next()) {
+                        System.out.println("Rno: " + rs.getInt("rno") +
+                                ", Name: " + rs.getString("name") +
+                                ", Age: " + rs.getInt("age") +
+                                ", Marks: " + rs.getInt("marks"));
+                    }
+                    break;
+                case 4:
+                    System.out.print("Enter Faculty Username: ");
+                    String facUser = sc.next();
+                    System.out.print("Enter New Name: ");
+                    String facName = sc.next();
+                    PreparedStatement facUpdate = connection.prepareStatement("UPDATE users SET username=? WHERE username=? AND role='Faculty'");
+                    facUpdate.setString(1, facName);
+                    facUpdate.setString(2, facUser);
+                    int updatedFac = facUpdate.executeUpdate();
+                    if (updatedFac == 0) {
+                        throw new UserNotFoundException("Faculty user not found: " + facUser);
+                    }
+                    System.out.println("Faculty name updated.");
+                    break;
+                case 5:
+                    return;
+                case 6:
+                    System.out.print("Enter Roll No to Delete: ");
+                    int rnoD = sc.nextInt();
+                    String deleteQuery = "DELETE FROM students WHERE rno=?";
+                    PreparedStatement deleteStmt = connection.prepareStatement(deleteQuery);
+                    deleteStmt.setInt(1, rnoD);
+                    int deleted = deleteStmt.executeUpdate();
+                    System.out.println(deleted > 0 ? "Student deleted." : "Student not found.");
+                    break;
