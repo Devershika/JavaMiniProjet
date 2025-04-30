@@ -1,7 +1,7 @@
                 case 7:
                     System.out.print("Enter Course ID: ");
                     int courseId = sc.nextInt();
-                    sc.nextLine();
+                    sc.nextLine():
                     System.out.print("Enter Course Name: ");
                     String courseName = sc.nextLine();
                     System.out.print("Enter Course Credits: ");
